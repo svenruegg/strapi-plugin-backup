@@ -128,7 +128,7 @@ module.exports = ({env}) => ({
 ### databaseDriver
 
 - Required
-- String (`sqlite` or `postgres` or `mysql`)
+- String (`sqlite` or `postgres` or `mysql` `strapi-export`)
 - Default : environment variable `DATABASE_CLIENT`
 
 ```js
@@ -251,6 +251,33 @@ module.exports = ({env}) => ({
 ```
 
 [Learn more about sqlite3](https://www.sqlite.org/cli.html)
+
+### strapiExportOptions
+
+- Required if you want to use `strapi-export`
+- Type: Object
+
+Options to be passed to the strapi export command. This allows you to customize the export process based on the available options in Strapi. A key is required or `no-encrypt` set to true.
+
+```js
+// ./config/plugins.js
+
+module.exports = ({env}) => ({
+  backup: {
+    enabled: true,
+    config: {
+      strapiExportOptions: {
+        only: 'content-types', // String: Export only specific type. Available Options: `content`, `files`, `config`
+        exclude: 'files', // String: Allows to exlude `content`, `files`, `configuration`. Multiple options possible with comma separation.
+        'no-encrypt': false, // Boolean: Disable default encryption.
+        key: 'my-encryption-key' // String: To use encryption an encryption key is needed.
+      }
+    }
+  }
+});
+```
+
+[Learn more about strapi Export](https://docs.strapi.io/dev-docs/data-management/export)
 
 ### customDatabaseBackupFilename
 

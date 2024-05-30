@@ -3,7 +3,7 @@
 const fs = require("fs");
 
 const {
-  createDatabaseDumperFromConfig
+  createDatabaseDumperFromConfig, StrapiDatabaseDriver
 } = require("../../../internal/db-dump");
 
 const {
@@ -58,10 +58,24 @@ module.exports = ({ strapi }) => {
     ) => {
       return new Promise((resolve, reject) => {
         const databaseDumpOutputFilename = createTmpFilename();
-        const databaseDumper = createDatabaseDumperFromConfig({
-          ...backupConfig,
-          ...createBackupDatabaseConnectionConfigFromStrapi(strapi)
-        });
+        const { databaseDriver } = backupConfig;
+
+        let mergedConfig;
+
+        if (databaseDriver === StrapiDatabaseDriver.STRAPI_EXPORT) {
+          mergedConfig = {
+            ...backupConfig,
+            ...createBackupDatabaseConnectionConfigFromStrapi(strapi),
+            databaseDriver
+          };
+        } else {
+          mergedConfig = {
+            ...backupConfig,
+            ...createBackupDatabaseConnectionConfigFromStrapi(strapi)
+          }
+        }
+        
+        const databaseDumper = createDatabaseDumperFromConfig(mergedConfig);
 
         databaseDumper.dump(databaseDumpOutputFilename)
           .then(() => {
