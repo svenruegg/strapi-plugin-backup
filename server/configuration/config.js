@@ -116,17 +116,10 @@ const customValidatorByRequiredConfigKey = {
     }
 
     if (config.databaseDriver === StrapiDatabaseDriver.STRAPI_EXPORT) {
-      if (!Object.keys(config).includes('strapiExportOptions')) {
-        throwConfigInvalidValueError('strapiExportOptions', config.strapiExportOptions);
-        return
-      }
-
-      if (!Object.keys(config.strapiExportOptions).includes('key')) {
-        if (!config.strapiExportOptions['no-encrypt']) {
+      if (typeof config.strapiExportOptions?.key !== 'string') {
+        if (!config.strapiExportOptions?.['no-encrypt']) {
           throw new Error('Strapi Export needs a valid key:string in the strapiExportOptions or no-encrypt set to true');
         }
-      } else if (typeof config.strapiExportOptions.key !== 'string') {
-        throwConfigInvalidValueError('strapiExportOptions.key', config.strapiExportOptions.key)
       }
     }
   },
@@ -195,7 +188,10 @@ module.exports = {
     databaseDriver: env('DATABASE_CLIENT'),
     mysqldumpOptions: [],
     pgDumpOptions: [],
-    strapiExportOptions: {},
+    strapiExportOptions: {
+      'no-encrypt': true,
+      exclude: 'files',
+    },
     allowCleanup: false,
     timeToKeepBackupsInSeconds: undefined,
     cleanupCronSchedule: undefined,

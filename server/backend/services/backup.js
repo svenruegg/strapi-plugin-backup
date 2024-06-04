@@ -33,6 +33,19 @@ module.exports = ({ strapi }) => {
     return new Promise((resolve, reject) => {
       const tmpArchiveFilePath = createTmpFilename();
 
+      // if the databaseDriver is set to STRAPI_EXPORT, we don't need to create an archive
+      if (backupConfig.databaseDriver === StrapiDatabaseDriver.STRAPI_EXPORT) {
+        storageService.put(
+          fs.createReadStream(`${filePath}.tar.gz`),
+          `${backupFilename}.tar.gz`
+        ).then(() => {
+          resolve();
+          fs.unlinkSync(`${filePath}.tar.gz`);
+        }).catch(reject);
+        return;
+      }
+
+      // else, create an archive from the dumped database file
       createArchive(filePath, tmpArchiveFilePath)
         .then(() => {
           return storageService.put(
