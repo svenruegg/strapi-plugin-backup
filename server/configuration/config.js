@@ -190,7 +190,6 @@ module.exports = {
     pgDumpOptions: [],
     strapiExportOptions: {
       'no-encrypt': true,
-      exclude: 'files',
     },
     allowCleanup: false,
     timeToKeepBackupsInSeconds: undefined,

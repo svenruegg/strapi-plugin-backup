@@ -256,7 +256,7 @@ module.exports = ({env}) => ({
 
 - Required if you want to use `strapi-export`
 - Type: Object
-- Default: `strapiExportOptions: {'no-encrypt': true, exclude: 'files}`
+- Default: `strapiExportOptions: {'no-encrypt': true}`
 
 Options to be passed to the strapi export command. This allows you to customize the export process based on the available options in Strapi.
 Add a key if you want to encrypt the export.
