@@ -56,8 +56,6 @@ module.exports = ({ strapi }) => {
     const dailyLimit = policies.days ? policies.days * 86400 : policies;
     const weeklyLimit = policies.weeks * 604800; // Convert to seconds
     const monthlyLimit = policies.months * 2592000; // Convert to seconds
-
-    console.log('dailyLimit:', dailyLimit);
   
     const dailyBackups = [];
     const weeklyBackups = [];
@@ -65,8 +63,6 @@ module.exports = ({ strapi }) => {
   
     backups.forEach(backupFile => {
       const timeDifferenceInSeconds = (now - backupFile.date) / 1000;
-
-      console.log('age in seconds:', timeDifferenceInSeconds);
   
       if (timeDifferenceInSeconds <= dailyLimit) {
         dailyBackups.push(backupFile);
@@ -76,17 +72,10 @@ module.exports = ({ strapi }) => {
         monthlyBackups.push(backupFile);
       }
     });
-
-    console.log('1minutely:', dailyBackups);
-    console.log('30minutely:', weeklyBackups);
-    console.log('hourly:', monthlyBackups);
   
     // Select unique backups for weekly and monthly periods
     const weeklyBackupsToKeep = getBackupsToKeep(weeklyBackups, 1800);
     const monthlyBackupsToKeep = getBackupsToKeep(monthlyBackups, 3600);
-
-    console.log('30minutelyToKeep:', weeklyBackupsToKeep);
-    console.log('hourlyToKeep:', monthlyBackupsToKeep);
   
     const backupsToDelete = backups.filter(backupFile =>
       !dailyBackups.includes(backupFile) &&
@@ -132,7 +121,6 @@ module.exports = ({ strapi }) => {
         .then(backups => {
           const backupsToDelete = applyCleanupPolicies(backups, backupConfig.cleanupPolicies || backupConfig.timeToKeepBackupsInSeconds);
           const backupNamesToDelete = backupsToDelete?.flatMap((backup) => backup.name);
-          console.log('backupsToDelete', backupNamesToDelete);
 
           return storageService.delete(backupNamesToDelete);
         });
