@@ -74,8 +74,8 @@ module.exports = ({ strapi }) => {
     });
   
     // Select unique backups for weekly and monthly periods
-    const weeklyBackupsToKeep = getBackupsToKeep(weeklyBackups, 1800);
-    const monthlyBackupsToKeep = getBackupsToKeep(monthlyBackups, 3600);
+    const weeklyBackupsToKeep = getBackupsToKeep(weeklyBackups, 604800);
+    const monthlyBackupsToKeep = getBackupsToKeep(monthlyBackups, 2592000);
   
     const backupsToDelete = backups.filter(backupFile =>
       !dailyBackups.includes(backupFile) &&
